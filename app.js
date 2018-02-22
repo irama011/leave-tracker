@@ -23,11 +23,15 @@ app.use(cors());
 app.use('/user',user)
 //Serve Static
 app.use(express.static(path.join(__dirname,'public')));
-mongoose.connect(db.database);
+mongoose.connect(db.database).then(() => {
+        console.log("Connected to DB:",db.database);
+    })
+    .catch(err => { // mongoose connection error will be handled here
+        console.error('App starting error:', err.stack);
+        process.exit(1);
+    });;
 
-mongoose.connection.on('connnected',()=>{
-    console.log("Connected to db:",db.database);
-})
+
 
 app.listen(port,()=>{
     console.log('App Listening on Port:',port);
