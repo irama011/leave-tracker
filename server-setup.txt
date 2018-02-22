@@ -1,0 +1,7 @@
+1. Import the express middleware and start the server.
+2. Use the Cors Middleware.
+3. Set up the routes.
+4. Set up the Database.
+    i. Create model and schema.
+    ii. Create functions for insert, update user.
+5. Setup Authentication using passport and JWT
