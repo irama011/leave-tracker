@@ -25,6 +25,10 @@ app.use('/user',user)
 app.use(express.static(path.join(__dirname,'public')));
 mongoose.connect(db.database);
 
+mongoose.connection.on('connnected',()=>{
+    console.log("Connected to db:",db.database);
+})
+
 app.listen(port,()=>{
     console.log('App Listening on Port:',port);
 })
