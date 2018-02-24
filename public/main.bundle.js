@@ -182,7 +182,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/apply-leave/apply-leave.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <form class='form-inline'>\n      <label>From:</label>\n      <input type='date' class='form-control' [(ngModel)]='from' name=\"from\">\n      <label>To:</label>\n      <input type='date' class='form-control' [(ngModel)]='to' name=\"to\" (change)='validateDate()'>\n      <button type='button' class='btn btn-success' (click)='applyLeave()'>Submit</button>\n      <!--label>Sort By:</label>\n  <select (change)='sortByDate(leavesArray,sortdate.value)' #sortdate [(ngModel)]='sortDate' name='sort'>\n    <option>From Date: low to high</option>\n    <option>From Date: high to low</option>\n    <option>To Date: low to high</option>\n    <option>To Date: high to low</option>\n  </select>\n  <label>Filter By:</label>\n  <select #filterOption [(ngModel)]='filterBy' name='filterby' (change)='fillFilterArray(filterOption.value)'>\n    <option>Name</option>\n    <option>Role</option>\n    <option>Team</option>\n    <option>Status</option>\n    <option>From</option>\n    <option>To</option>\n  </select>\n  <select #filter>\n    <option *ngFor ='let filter of filterArray'>{{filterOption.value.toLowerCase()}}{{filter[filterOption.value.toLowerCase()]}}</option>\n  </select> \n  <button type='button' class='btn btn-success' (click)='filterValueBy(filterOption.value,filter.value)'>Filter</button> \n  <button type='button' class='btn btn-default' (click)='removeFilter()'>Clear</button-->\n\n    </form>\n  </div>\n</div>\n<br/>\n<div class='row'>\n  <div class='col-12 col-md-12'>\n    <table class='table table-striped' (load)=\"showLeaves()\">\n      <tr>\n        <th>SNo.</th>\n        <th>Name</th>\n        <th>Team</th>\n        <th>Role</th>\n        <th>From</th>\n        <th>To</th>\n        <th>Status</th>\n      </tr>\n      <tr *ngFor='let leave of leavesArray;let i=index'>\n        <td>{{i+1}}</td>\n        <td>{{leave.name}}</td>\n        <td>{{leave.team}}</td>\n        <td>{{leave.role}}</td>\n        <td>{{leave.from}}</td>\n        <td>{{leave.to}}</td>\n        <td>{{leave.status}}</td>\n      </tr>\n    </table>\n  </div>\n</div>"
+module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <form class='form-inline'>\n      <div class='form-group'>\n        <label>From:</label>\n        <input type='date' class='form-control' [(ngModel)]='from' name=\"from\">\n      </div>\n      <div class='form-group'>\n        <label>To:</label>\n        <input type='date' class='form-control' [(ngModel)]='to' name=\"to\" (change)='validateDate()'>\n      </div>\n      <button type='button' class='btn btn-success' (click)='applyLeave()'>Submit</button>\n      <div class='form-group'>\n        <label>Sort By:</label>\n        <select (change)='sortByDate(leavesArray,sortdate.value)' #sortdate [(ngModel)]='sortDate' name='sort'>\n          <option>From Date: low to high</option>\n          <option>From Date: high to low</option>\n          <option>To Date: low to high</option>\n          <option>To Date: high to low</option>\n        </select>\n      </div>\n      <div class='form-group'>\n        <label>Filter By:</label>\n        <select #filterOption [(ngModel)]='filterBy' name='filterby' (change)='fillFilterArray(filterOption.value)'>\n          <option>Name</option>\n          <option>Role</option>\n          <option>Team</option>\n          <option>Status</option>\n          <option>Date</option>\n        </select>\n        <select *ngIf=\"filterOption.value!=='Date'\" [(ngModel)]=\"filter\" name=\"filter\">\n          <option *ngFor='let filter of filterArray'>{{filter}}</option>\n        </select>\n      </div>\n      <div class='form-group'>\n        <div *ngIf=\"filterOption.value==='Date'\">\n          <br/>\n          <label>\n            <span class='glyphicon glyphicon-filter'>From:</span>\n          </label>\n          <input type=\"date\" placeholder=\"From\" [(ngModel)]=\"filterFrom\" name=\"filterFrom\" class='form-control'>\n          <label>\n            <span class='glyphicon glyphicon-filter'>To:</span>\n          </label>\n          <input type=\"date\" placeholder=\"To\" [(ngModel)]=\"filterTo\" name=\"filterTo\" class='form-control'>\n        </div>\n      </div>\n      <button type='button' class='btn btn-success' (click)=\"filterOption.value!=='Date'?filterValueBy(filterBy,filter):filterByDate(filterFrom,filterTo)\">Apply</button>\n      <button type='button' class='btn btn-default' (click)=\"removeFilter()\">Clear</button>\n\n    </form>\n  </div>\n</div>\n<br/>\n<div class='row'>\n  <div class='col-12 col-md-12'>\n    <table class='table table-striped' (load)=\"showLeaves()\">\n      <tr>\n        <th>SNo.</th>\n        <th>Name</th>\n        <th>Team</th>\n        <th>Role</th>\n        <th>From</th>\n        <th>To</th>\n        <th>Status</th>\n      </tr>\n      <tr *ngFor='let leave of leavesArray;let i=index'>\n        <td>{{i+1}}</td>\n        <td>{{leave.name}}</td>\n        <td>{{leave.team}}</td>\n        <td>{{leave.role}}</td>\n        <td>{{leave.from}}</td>\n        <td>{{leave.to}}</td>\n        <td>{{leave.status}}</td>\n      </tr>\n    </table>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -321,6 +321,25 @@ var ApplyLeaveComponent = /** @class */ (function () {
             }
         }
     };
+    ApplyLeaveComponent.prototype.fillFilterArray = function (filterBy) {
+        var _this = this;
+        this.filterArray = [];
+        this.leavesArray.forEach(function (value) {
+            console.log("Leaves Array Element:", value[filterBy.toLowerCase()]);
+            if (_this.filterArray.length === 0) {
+                console.log("Inside If!!!");
+                _this.filterArray.push(value[filterBy.toLowerCase()]);
+            }
+            else {
+                _this.filterArray.forEach(function (ele) {
+                    if (ele !== value[filterBy.toLowerCase()]) {
+                        _this.filterArray.push(value[filterBy.toLowerCase()]);
+                    }
+                });
+            }
+        });
+        console.log('Filter Array:', this.filterArray);
+    };
     ApplyLeaveComponent.prototype.filterValueBy = function (filterBy, value) {
         console.log('Button CLicked!!', value);
         var arrayForFilter = [];
@@ -334,19 +353,24 @@ var ApplyLeaveComponent = /** @class */ (function () {
         console.log(arrayForFilter);
         this.leavesArray = arrayForFilter;
     };
+    ApplyLeaveComponent.prototype.filterByDate = function (from, to) {
+        var _this = this;
+        var filterByDateArray = [];
+        console.log("Filter By Date", typeof from, to);
+        this.leavesArray.forEach(function (leave) {
+            console.log("Inside Filter by date:", leave);
+            console.log(_this.formatDate(_this.filterFrom) <= leave.from);
+            if (_this.formatDate(_this.filterFrom) <= leave.from) {
+                if (_this.formatDate(_this.filterTo) >= leave.to) {
+                    console.log("Inside If", _this.filterTo, leave.to);
+                    filterByDateArray.push(leave);
+                }
+            }
+        });
+        this.leavesArray = filterByDateArray;
+    };
     ApplyLeaveComponent.prototype.removeFilter = function () {
         this.showLeaves();
-    };
-    ApplyLeaveComponent.prototype.fillFilterArray = function (option) {
-        var newArray = [];
-        var lookupObject = {};
-        for (var i in this.leavesArray) {
-            lookupObject[this.leavesArray[i][option.toLowerCase()]] = this.leavesArray[i];
-        }
-        for (i in lookupObject) {
-            this.filterArray.push(lookupObject[i]);
-        }
-        console.log('New Array:', newArray);
     };
     ApplyLeaveComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -384,7 +408,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/approve-leave/approve-leave.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <div *ngIf='!showForm'>\n      To approve leaves, click on any leave you want to approve and approve leaves.\n    </div>\n    <br/>\n    <form class='form-inline' *ngIf='showForm'>\n\n      <label>Name:</label>\n      {{leaveToApprove.name}}\n      <label>Team:</label>\n      {{leaveToApprove.team}}\n      <label>Role:</label>\n      {{leaveToApprove.role}}\n      <label>From:</label>\n      {{leaveToApprove.from}}\n      <label>To:</label>\n      {{leaveToApprove.to}}\n      <label>From:</label>\n      {{leaveToApprove.from}}\n      <label>Status:</label>\n      <select [(ngModel)]='leaveStatus' name='status'>\n        <option>Approve</option>\n        <option>Decline</option>\n      </select>\n      <label>Comments:</label>\n      <input type='textbox' [(ngModel)]='leaveComments' name='comments'>\n      <button type='button' class='btn btn-success' (click)=approveLeaves(leaveToApprove._id)>Submit</button>\n      <button type='button' class='btn btn-danger'>Cancel</button>\n      <br/>\n    </form>\n    <table class='table table-striped' id='leaveTable'>\n\n      <tr>\n        <th>SNo.</th>\n        <th>Name</th>\n        <th>Team</th>\n        <th>Role</th>\n        <th>From</th>\n        <th>To</th>\n        <th>Status</th>\n        <th>Comments</th>\n      </tr>\n      <tr *ngFor='let leave of leavesApproveArray;let i=index' (click)='enableApproveLeave(leave,i)'>\n        <td>{{i+1}}</td>\n        <td>{{leave.name}}</td>\n        <td>{{leave.team}}</td>\n        <td>{{leave.role}}</td>\n        <td>{{leave.from}}</td>\n        <td>{{leave.to}}</td>\n        <td>{{leave.status}}</td>\n        <td>{{leave.comments}}</td>\n        <td hidden>{{leave._id}}</td>\n      </tr>\n    </table>\n  </div>\n</div>"
+module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <div *ngIf='!showForm'>\n      To approve leaves, click on any leave you want to approve and approve leaves.\n    </div>\n    <br/>\n    <form class='form-inline' *ngIf='!showForm'>\n       \n        <div class='form-group'>\n          <label>Sort By:</label>\n          <select (change)='sortByDate(leavesApproveArray,sortdate.value)' #sortdate [(ngModel)]='sortDate' name='sort'>\n            <option>From Date: low to high</option>\n            <option>From Date: high to low</option>\n            <option>To Date: low to high</option>\n            <option>To Date: high to low</option>\n          </select>\n        </div>\n        <div class='form-group'>\n          <label>Filter By:</label>\n          <select #filterOption [(ngModel)]='filterBy' name='filterby' (change)='fillFilterArray(filterOption.value)'>\n            <option>Name</option>\n            <option>Role</option>\n            <option>Date</option>\n          </select>\n          <select *ngIf=\"filterOption.value!=='Date'\" [(ngModel)]=\"filter\" name=\"filter\">\n            <option *ngFor='let filter of filterArray'>{{filter}}</option>\n          </select>\n        </div>\n        <div class='form-group'>\n          <div *ngIf=\"filterOption.value==='Date'\">\n            <br/>\n            <label>\n              <span class='glyphicon glyphicon-filter'>From:</span>\n            </label>\n            <input type=\"date\" placeholder=\"From\" [(ngModel)]=\"filterFrom\" name=\"filterFrom\" class='form-control'>\n            <label>\n              <span class='glyphicon glyphicon-filter'>To:</span>\n            </label>\n            <input type=\"date\" placeholder=\"To\" [(ngModel)]=\"filterTo\" name=\"filterTo\" class='form-control'>\n          </div>\n        </div>\n        <button type='button' class='btn btn-success' (click)=\"filterOption.value!=='Date'?filterValueBy(filterBy,filter):filterByDate(filterFrom,filterTo)\">Apply</button>\n        <button type='button' class='btn btn-default' (click)=\"removeFilter()\">Clear</button>\n  \n      </form>\n    <form class='form-inline' *ngIf='showForm'>\n      <div class='form-group'>\n      <label>Name:</label>\n      {{leaveToApprove.name}}\n      </div>\n     \n      <div class='form-group'>\n      <label>Role:</label>\n      {{leaveToApprove.role}}\n      </div>\n      <div class='form-group'>\n      <label>From:</label>\n      {{leaveToApprove.from}}\n      </div>\n      <div class='form-group'>\n      <label>To:</label>\n      {{leaveToApprove.to}}\n      </div>\n      <div class='form-group'>\n      <label>From:</label>\n      {{leaveToApprove.from}}\n      </div>\n      <div class='form-group'>\n      <label>Status:</label>\n      </div>\n      <div class='form-group'>\n      <select [(ngModel)]='leaveStatus' name='status'>\n        <option>Approve</option>\n        <option>Decline</option>\n      </select>\n      </div>\n      <div class='form-group'>\n      <label>Comments:</label>\n      <input type='textbox' [(ngModel)]='leaveComments' name='comments' placeholder=\"Optional\">\n      </div>\n      <button type='button' class='btn btn-success' (click)=approveLeaves(leaveToApprove._id)>Submit</button>\n      <button type='button' class='btn btn-danger' (click)=\"this.showForm=0\">Cancel</button>\n      <br/>\n    </form>\n    <hr/>\n    <table class='table table-striped' id='leaveTable'>\n\n      <tr>\n        <th>SNo.</th>\n        <th>Name</th>\n        <th>Team</th>\n        <th>Role</th>\n        <th>From</th>\n        <th>To</th>\n        <th>Status</th>\n        <th>Comments</th>\n      </tr>\n      <tr *ngFor='let leave of leavesApproveArray;let i=index' (click)='enableApproveLeave(leave,i)'>\n        <td>{{i+1}}</td>\n        <td>{{leave.name}}</td>\n        <td>{{leave.team}}</td>\n        <td>{{leave.role}}</td>\n        <td>{{leave.from}}</td>\n        <td>{{leave.to}}</td>\n        <td>{{leave.status}}</td>\n        <td>{{leave.comments}}</td>\n        <td hidden>{{leave._id}}</td>\n      </tr>\n    </table>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -395,6 +419,8 @@ module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <div 
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApproveLeaveComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_leaves_service__ = __webpack_require__("../../../../../src/app/services/leaves.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angular2_flash_messages_module_flash_messages_service__ = __webpack_require__("../../../../angular2-flash-messages/module/flash-messages.service.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angular2_flash_messages_module_flash_messages_service___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_angular2_flash_messages_module_flash_messages_service__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -406,14 +432,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var ApproveLeaveComponent = /** @class */ (function () {
-    function ApproveLeaveComponent(leaveService) {
+    function ApproveLeaveComponent(leaveService, flash) {
         this.leaveService = leaveService;
+        this.flash = flash;
         this.leavesApproveArray = [];
+        this.filterArray = [];
         this.user = JSON.parse(localStorage.getItem('user'));
     }
     ApproveLeaveComponent.prototype.ngOnInit = function () {
         this.showApprovalLeaves();
+    };
+    ApproveLeaveComponent.prototype.formatDate = function (date) {
+        var arr = date.split('-');
+        return (arr[2] + '-' + arr[1] + '-' + arr[0]);
     };
     ApproveLeaveComponent.prototype.showApprovalLeaves = function () {
         var _this = this;
@@ -451,10 +484,132 @@ var ApproveLeaveComponent = /** @class */ (function () {
             status: this.leaveStatus + 'd',
             comment: this.leaveComments
         };
+        if (this.leaveStatus === undefined) {
+            this.flash.show("Please fill all empty fields!!", { cssClass: "alert-danger", timeout: 3000 });
+            return;
+        }
         this.leaveService.approveLeaves(details).subscribe(function (data) {
             _this.leavesApproveArray.splice(_this.rowId, 1);
         });
         this.showForm = 0;
+    };
+    ApproveLeaveComponent.prototype.sortInAscending = function (arr, option) {
+        if (option === 'to') {
+            arr.sort(function (a, b) {
+                if (a.to < b.to) {
+                    return -1;
+                }
+                else {
+                    return +1;
+                }
+            });
+        }
+        else {
+            arr.sort(function (a, b) {
+                if (a.from < b.from) {
+                    return -1;
+                }
+                else {
+                    return +1;
+                }
+            });
+        }
+    };
+    ApproveLeaveComponent.prototype.sortInDescending = function (arr, option) {
+        if (option === 'to') {
+            arr.sort(function (a, b) {
+                if (a.to > b.to) {
+                    return -1;
+                }
+                else {
+                    return +1;
+                }
+            });
+        }
+        else {
+            arr.sort(function (a, b) {
+                if (a.from > b.from) {
+                    return -1;
+                }
+                else {
+                    return +1;
+                }
+            });
+        }
+    };
+    ApproveLeaveComponent.prototype.sortByDate = function (arr, option) {
+        switch (option) {
+            case 'To Date: high to low': {
+                this.sortInDescending(arr, 'to');
+                break;
+            }
+            case 'To Date: low to high': {
+                this.sortInAscending(arr, 'to');
+                break;
+            }
+            case 'From Date: high to low': {
+                this.sortInDescending(arr, 'from');
+                break;
+            }
+            case 'From Date: low to high': {
+                this.sortInAscending(arr, 'from');
+                break;
+            }
+            default: {
+                return;
+            }
+        }
+    };
+    ApproveLeaveComponent.prototype.fillFilterArray = function (filterBy) {
+        var _this = this;
+        this.filterArray = [];
+        this.leavesApproveArray.forEach(function (value) {
+            console.log("Leaves Array Element:", value[filterBy.toLowerCase()]);
+            if (_this.filterArray.length === 0) {
+                console.log("Inside If!!!");
+                _this.filterArray.push(value[filterBy.toLowerCase()]);
+            }
+            else {
+                _this.filterArray.forEach(function (ele) {
+                    if (ele !== value[filterBy.toLowerCase()]) {
+                        _this.filterArray.push(value[filterBy.toLowerCase()]);
+                    }
+                });
+            }
+        });
+        console.log('Filter Array:', this.filterArray);
+    };
+    ApproveLeaveComponent.prototype.filterValueBy = function (filterBy, value) {
+        console.log('Button CLicked!!', value);
+        var arrayForFilter = [];
+        this.leavesApproveArray.forEach(function (leave) {
+            console.log(leave);
+            //return (leave[filterBy.toLowerCase()]===value);
+            if (leave[filterBy.toLowerCase()] === value) {
+                arrayForFilter.push(leave);
+            }
+        });
+        console.log(arrayForFilter);
+        this.leavesApproveArray = arrayForFilter;
+    };
+    ApproveLeaveComponent.prototype.filterByDate = function (from, to) {
+        var _this = this;
+        var filterByDateArray = [];
+        console.log("Filter By Date", typeof from, to);
+        this.leavesApproveArray.forEach(function (leave) {
+            console.log("Inside Filter by date:", leave);
+            console.log(_this.formatDate(_this.filterFrom) <= leave.from);
+            if (_this.formatDate(_this.filterFrom) <= leave.from) {
+                if (_this.formatDate(_this.filterTo) >= leave.to) {
+                    console.log("Inside If", _this.filterTo, leave.to);
+                    filterByDateArray.push(leave);
+                }
+            }
+        });
+        this.leavesApproveArray = filterByDateArray;
+    };
+    ApproveLeaveComponent.prototype.removeFilter = function () {
+        this.showApprovalLeaves();
     };
     ApproveLeaveComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -462,7 +617,7 @@ var ApproveLeaveComponent = /** @class */ (function () {
             template: __webpack_require__("../../../../../src/app/approve-leave/approve-leave.component.html"),
             styles: [__webpack_require__("../../../../../src/app/approve-leave/approve-leave.component.css")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_leaves_service__["a" /* LeavesService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_leaves_service__["a" /* LeavesService */], __WEBPACK_IMPORTED_MODULE_2_angular2_flash_messages_module_flash_messages_service__["FlashMessagesService"]])
     ], ApproveLeaveComponent);
     return ApproveLeaveComponent;
 }());
@@ -903,7 +1058,7 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.getUsers = function () {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('user/register', { headers: headers })
+        return this.http.get('/user/register', { headers: headers })
             .map(function (res) { return res.json(); });
     };
     AuthService.prototype.checkUser = function (user) {
@@ -915,13 +1070,13 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.registerUser = function (user) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('user/register', user, { headers: headers })
+        return this.http.post('/user/register', user, { headers: headers })
             .map(function (res) { return res.json(); });
     };
     AuthService.prototype.authenticateUser = function (user) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('user/authenticate', user, { headers: headers })
+        return this.http.post('/user/authenticate', user, { headers: headers })
             .map(function (res) { return res.json(); });
     };
     AuthService.prototype.storeDetails = function (user, token) {
@@ -984,14 +1139,14 @@ var LeavesService = /** @class */ (function () {
     LeavesService.prototype.applyLeave = function (leave) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('user/apply-leave', leave, { headers: headers })
+        return this.http.post('/user/apply-leave', leave, { headers: headers })
             .map(function (res) { return res.json(); });
     };
     LeavesService.prototype.showLeaves = function () {
         console.log('Inside Show Leaves');
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('user/apply-leave')
+        return this.http.get('/user/apply-leave')
             .map(function (res) { return res.json(); });
     };
     LeavesService.prototype.showLeavesToApprove = function (team) {
@@ -999,14 +1154,14 @@ var LeavesService = /** @class */ (function () {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({ headers: headers });
-        return this.http.get('user/approve-leave', options)
+        return this.http.get('/user/approve-leave', options)
             .map(function (res) { return res.json(); });
     };
     LeavesService.prototype.approveLeaves = function (details) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({ headers: headers });
-        return this.http.put('user/approve-leave', details, options)
+        return this.http.put('/user/approve-leave', details, options)
             .map(function (res) { return res.json(); });
     };
     LeavesService = __decorate([
