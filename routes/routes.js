@@ -37,14 +37,21 @@ router.get('/register',(req,res,next)=>{
 
 
 router.post('/authenticate', (req, res) => {
-    console.log(req.body);
+    console.log("Request:",req.body);
     const username = req.body.username;
     const password = req.body.password;
     userModel.findUserByName(username, (err, user) => {
-        if (!user) throw err;
+        if (!user) {
+            console.log("User Not Found!!");
+            throw err;
+        } 
         else {
             userModel.comparePassword(password, user.password, (err, isMatch) => {
-                if (err) throw err;
+                if (err){
+                    console.log("User and Password do not match");
+                    throw err;
+                    
+                } 
                 if (isMatch) {
                     const token = jwt.sign(user.toJSON(), db.secret, { expiresIn: 3600 });
                     res.json({
