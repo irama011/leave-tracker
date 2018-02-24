@@ -2,7 +2,7 @@
 const url = "mongodb://user:pass@ds247078.mlab.com:47078/users";
 console.log(url);
 module.exports = {
-   // database: url||'mongodb://localhost:27017/users',
-    database:'mongodb://localhost:27017/users',
+   database: url||'mongodb://localhost:27017/users',
+    //database:'mongodb://localhost:27017/users',
     secret:'11@Gooner'
 }
