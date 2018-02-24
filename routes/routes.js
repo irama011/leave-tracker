@@ -49,6 +49,7 @@ router.post('/authenticate', (req, res) => {
             userModel.comparePassword(password, user.password, (err, isMatch) => {
                 if (err){
                     console.log("User and Password do not match");
+                    res.json({ success: false, msg: 'Authentication Failed' });
                     throw err;
                     
                 } 
