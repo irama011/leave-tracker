@@ -674,11 +674,11 @@ var LoginComponent = /** @class */ (function () {
             if (data.success) {
                 _this.auth.storeDetails(data.user, data.token);
                 _this.auth.setAdmin(data.user.isAdmin);
-                _this.flash.show('Successfully Logged in', { cssClass: 'alert-success', timeout: 300 });
+                _this.flash.show('Successfully Logged in', { cssClass: 'alert-success', timeout: 3000 });
                 _this.router.navigate(['/apply-leave']);
             }
             else {
-                _this.flash.show('Username and Password do not match', { cssClass: 'alert-danger', timeout: 300 });
+                _this.flash.show('Username and Password do not match', { cssClass: 'alert-danger', timeout: 3000 });
                 _this.router.navigate(['/login']);
             }
         });
