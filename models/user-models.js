@@ -56,6 +56,7 @@ module.exports.addUser = function(newuser,callback){
 
 module.exports.findUsers = function({},callback){
     user.find({},callback);
+
 }
 
 module.exports.findUserByName = function(name,callback){

@@ -97,6 +97,7 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__services_auth_service__ = __webpack_require__("../../../../../src/app/services/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__services_leaves_service__ = __webpack_require__("../../../../../src/app/services/leaves.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__services_auth_guard_service__ = __webpack_require__("../../../../../src/app/services/auth.guard.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -120,12 +121,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var routesArray = [
     { path: '', component: __WEBPACK_IMPORTED_MODULE_10__home_home_component__["a" /* HomeComponent */] },
     { path: 'register', component: __WEBPACK_IMPORTED_MODULE_6__register_register_component__["a" /* RegisterComponent */] },
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_7__login_login_component__["a" /* LoginComponent */] },
-    { path: 'apply-leave', component: __WEBPACK_IMPORTED_MODULE_8__apply_leave_apply_leave_component__["a" /* ApplyLeaveComponent */] },
-    { path: 'approve-leave', component: __WEBPACK_IMPORTED_MODULE_9__approve_leave_approve_leave_component__["a" /* ApproveLeaveComponent */] }
+    { path: 'apply-leave', component: __WEBPACK_IMPORTED_MODULE_8__apply_leave_apply_leave_component__["a" /* ApplyLeaveComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_17__services_auth_guard_service__["a" /* AuthGuardService */]] },
+    { path: 'approve-leave', component: __WEBPACK_IMPORTED_MODULE_9__approve_leave_approve_leave_component__["a" /* ApproveLeaveComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_17__services_auth_guard_service__["a" /* AuthGuardService */]] }
 ];
 var AppModule = /** @class */ (function () {
     function AppModule() {
@@ -148,7 +150,7 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_13_angular2_flash_messages_module_module__["FlashMessagesModule"],
                 __WEBPACK_IMPORTED_MODULE_16__angular_http__["HttpModule"]
             ],
-            providers: [__WEBPACK_IMPORTED_MODULE_11__services_validate_service__["a" /* ValidateService */], __WEBPACK_IMPORTED_MODULE_12_angular2_flash_messages_module_flash_messages_service__["FlashMessagesService"], __WEBPACK_IMPORTED_MODULE_14__services_auth_service__["a" /* AuthService */], __WEBPACK_IMPORTED_MODULE_15__services_leaves_service__["a" /* LeavesService */]],
+            providers: [__WEBPACK_IMPORTED_MODULE_11__services_validate_service__["a" /* ValidateService */], __WEBPACK_IMPORTED_MODULE_12_angular2_flash_messages_module_flash_messages_service__["FlashMessagesService"], __WEBPACK_IMPORTED_MODULE_14__services_auth_service__["a" /* AuthService */], __WEBPACK_IMPORTED_MODULE_15__services_leaves_service__["a" /* LeavesService */], __WEBPACK_IMPORTED_MODULE_17__services_auth_guard_service__["a" /* AuthGuardService */]],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
         })
     ], AppModule);
@@ -180,7 +182,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/apply-leave/apply-leave.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<form class='form-inline'>\n  <label>From:</label>\n  <input type='date' class='form-control' [(ngModel)]='from' name=\"from\">\n  <label>To:</label>\n  <input type='date' class='form-control' [(ngModel)]='to' name=\"to\" (change)='validateDate()'>\n  <button type='button' class='btn btn-success' (click)='applyLeave()'>Submit</button>\n  <!--label>Sort By:</label>\n  <select (change)='sortByDate(leavesArray,sortdate.value)' #sortdate [(ngModel)]='sortDate' name='sort'>\n    <option>From Date: low to high</option>\n    <option>From Date: high to low</option>\n    <option>To Date: low to high</option>\n    <option>To Date: high to low</option>\n  </select>\n  <label>Filter By:</label>\n  <select #filterOption [(ngModel)]='filterBy' name='filterby' (change)='fillFilterArray(filterOption.value)'>\n    <option>Name</option>\n    <option>Role</option>\n    <option>Team</option>\n    <option>Status</option>\n    <option>From</option>\n    <option>To</option>\n  </select>\n  <select #filter>\n    <option *ngFor ='let filter of filterArray'>{{filterOption.value.toLowerCase()}}{{filter[filterOption.value.toLowerCase()]}}</option>\n  </select> \n  <button type='button' class='btn btn-success' (click)='filterValueBy(filterOption.value,filter.value)'>Filter</button> \n  <button type='button' class='btn btn-default' (click)='removeFilter()'>Clear</button-->\n  \n</form>\n<br/>\n<table class='table table-striped' (load)=\"showLeaves()\">\n  <tr>\n    <th>SNo.</th>\n    <th>Name</th>\n    <th>Team</th>\n    <th>Role</th>\n    <th>From</th>\n    <th>To</th>\n    <th>Status</th>\n  </tr>\n  <tr *ngFor='let leave of leavesArray;let i=index'>\n    <td>{{i+1}}</td>\n    <td>{{leave.name}}</td>\n    <td>{{leave.team}}</td>\n    <td>{{leave.role}}</td>\n    <td>{{leave.from}}</td>\n    <td>{{leave.to}}</td>\n    <td>{{leave.status}}</td>\n  </tr>\n</table>"
+module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <form class='form-inline'>\n      <label>From:</label>\n      <input type='date' class='form-control' [(ngModel)]='from' name=\"from\">\n      <label>To:</label>\n      <input type='date' class='form-control' [(ngModel)]='to' name=\"to\" (change)='validateDate()'>\n      <button type='button' class='btn btn-success' (click)='applyLeave()'>Submit</button>\n      <!--label>Sort By:</label>\n  <select (change)='sortByDate(leavesArray,sortdate.value)' #sortdate [(ngModel)]='sortDate' name='sort'>\n    <option>From Date: low to high</option>\n    <option>From Date: high to low</option>\n    <option>To Date: low to high</option>\n    <option>To Date: high to low</option>\n  </select>\n  <label>Filter By:</label>\n  <select #filterOption [(ngModel)]='filterBy' name='filterby' (change)='fillFilterArray(filterOption.value)'>\n    <option>Name</option>\n    <option>Role</option>\n    <option>Team</option>\n    <option>Status</option>\n    <option>From</option>\n    <option>To</option>\n  </select>\n  <select #filter>\n    <option *ngFor ='let filter of filterArray'>{{filterOption.value.toLowerCase()}}{{filter[filterOption.value.toLowerCase()]}}</option>\n  </select> \n  <button type='button' class='btn btn-success' (click)='filterValueBy(filterOption.value,filter.value)'>Filter</button> \n  <button type='button' class='btn btn-default' (click)='removeFilter()'>Clear</button-->\n\n    </form>\n  </div>\n</div>\n<br/>\n<div class='row'>\n  <div class='col-12 col-md-12'>\n    <table class='table table-striped' (load)=\"showLeaves()\">\n      <tr>\n        <th>SNo.</th>\n        <th>Name</th>\n        <th>Team</th>\n        <th>Role</th>\n        <th>From</th>\n        <th>To</th>\n        <th>Status</th>\n      </tr>\n      <tr *ngFor='let leave of leavesArray;let i=index'>\n        <td>{{i+1}}</td>\n        <td>{{leave.name}}</td>\n        <td>{{leave.team}}</td>\n        <td>{{leave.role}}</td>\n        <td>{{leave.from}}</td>\n        <td>{{leave.to}}</td>\n        <td>{{leave.status}}</td>\n      </tr>\n    </table>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -382,7 +384,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/approve-leave/approve-leave.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf='!showForm'>\n  To approve leaves, double click on any leave you want to approve and approve leaves.\n</div><br/>\n<form class='form-inline' *ngIf='showForm'>\n\n  <label>Name:</label>\n  {{leaveToApprove.name}}\n  <label>Team:</label>\n  {{leaveToApprove.team}}\n  <label>Role:</label>\n  {{leaveToApprove.role}}\n  <label>From:</label>\n  {{leaveToApprove.from}}\n  <label>To:</label>\n  {{leaveToApprove.to}}\n  <label>From:</label>\n  {{leaveToApprove.from}}\n  <label>Status:</label>\n  <select [(ngModel)]='leaveStatus' name='status'>\n    <option>Approve</option>\n    <option>Decline</option>\n  </select>\n  <label>Comments:</label>\n  <input type='textbox' [(ngModel)]='leaveComments' name='comments'>\n  <button type='button' class='btn btn-success' (click)=approveLeaves(leaveToApprove._id)>Submit</button>\n  <button type='button' class='btn btn-danger'>Cancel</button>\n  <br/>\n</form>\n<table class='table table-striped' id='leaveTable'>\n\n  <tr>\n    <th>SNo.</th>\n    <th>Name</th>\n    <th>Team</th>\n    <th>Role</th>\n    <th>From</th>\n    <th>To</th>\n    <th>Status</th>\n    <th>Comments</th>\n  </tr>\n  <tr *ngFor='let leave of leavesApproveArray;let i=index' (dblclick)='enableApproveLeave(leave,i)'>\n    <td>{{i+1}}</td>\n    <td>{{leave.name}}</td>\n    <td>{{leave.team}}</td>\n    <td>{{leave.role}}</td>\n    <td>{{leave.from}}</td>\n    <td>{{leave.to}}</td>\n    <td>{{leave.status}}</td>\n    <td>{{leave.comments}}</td>\n    <td hidden>{{leave._id}}</td>\n  </tr>\n</table>"
+module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <div *ngIf='!showForm'>\n      To approve leaves, click on any leave you want to approve and approve leaves.\n    </div>\n    <br/>\n    <form class='form-inline' *ngIf='showForm'>\n\n      <label>Name:</label>\n      {{leaveToApprove.name}}\n      <label>Team:</label>\n      {{leaveToApprove.team}}\n      <label>Role:</label>\n      {{leaveToApprove.role}}\n      <label>From:</label>\n      {{leaveToApprove.from}}\n      <label>To:</label>\n      {{leaveToApprove.to}}\n      <label>From:</label>\n      {{leaveToApprove.from}}\n      <label>Status:</label>\n      <select [(ngModel)]='leaveStatus' name='status'>\n        <option>Approve</option>\n        <option>Decline</option>\n      </select>\n      <label>Comments:</label>\n      <input type='textbox' [(ngModel)]='leaveComments' name='comments'>\n      <button type='button' class='btn btn-success' (click)=approveLeaves(leaveToApprove._id)>Submit</button>\n      <button type='button' class='btn btn-danger'>Cancel</button>\n      <br/>\n    </form>\n    <table class='table table-striped' id='leaveTable'>\n\n      <tr>\n        <th>SNo.</th>\n        <th>Name</th>\n        <th>Team</th>\n        <th>Role</th>\n        <th>From</th>\n        <th>To</th>\n        <th>Status</th>\n        <th>Comments</th>\n      </tr>\n      <tr *ngFor='let leave of leavesApproveArray;let i=index' (click)='enableApproveLeave(leave,i)'>\n        <td>{{i+1}}</td>\n        <td>{{leave.name}}</td>\n        <td>{{leave.team}}</td>\n        <td>{{leave.role}}</td>\n        <td>{{leave.from}}</td>\n        <td>{{leave.to}}</td>\n        <td>{{leave.status}}</td>\n        <td>{{leave.comments}}</td>\n        <td hidden>{{leave._id}}</td>\n      </tr>\n    </table>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -490,7 +492,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/header/header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"navbar navbar-inverse\">\n  <div class='container-fluid'>\n  <div class='navbar-header'>\n    <a class='navbar-brand' [routerLink]=\"['/']\">Leave Management System</a>\n    \n  </div>\n  <ul class='nav navbar-nav'>\n    <li *ngIf='auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\"><a [routerLink]=\"['/']\">Home</a></li>\n    <li *ngIf='auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\"><a [routerLink]=\"['/apply-leave']\">Apply Leave</a></li>\n    <li *ngIf='auth.isLoggedIn() && (auth.isAdmin===1)'[routerLinkActive]=\"['active'] \" [routerLinkActiveOptions]=\"{exact:true}\"><a [routerLink]=\"['/approve-leave']\">Approve Leave</a></li>\n  </ul>\n  <ul class='nav navbar-nav navbar-right'>\n    <li *ngIf='!auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\"><a  [routerLink]=\"['/register']\">Register</a></li>\n    <li *ngIf='!auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\"><a  [routerLink]=\"['/login']\">Login</a></li>\n    <li *ngIf='auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\" (click)='logOut()'><a href='#'>Logout</a></li>\n    \n  </ul>\n  </div>\n</div>\n\n"
+module.exports = "<nav class=\"navbar navbar-inverse\">\n  <div class='container-fluid'>\n    <div class='navbar-header'>\n      <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#myNavbar\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class='navbar-brand' [routerLink]=\"['/']\">Leave Management System</a>\n\n    </div>\n    <div class='collapse navbar-collapse' id='myNavbar'>\n      <ul class='nav navbar-nav'>\n        <li *ngIf='auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\">\n          <a [routerLink]=\"['/']\">Home</a>\n        </li>\n        <li *ngIf='auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\">\n          <a [routerLink]=\"['/apply-leave']\">Apply Leave</a>\n        </li>\n        <li *ngIf='auth.isLoggedIn() && (auth.isAdmin===1)' [routerLinkActive]=\"['active'] \" [routerLinkActiveOptions]=\"{exact:true}\">\n          <a [routerLink]=\"['/approve-leave']\">Approve Leave</a>\n        </li>\n      </ul>\n      <ul class='nav navbar-nav navbar-right'>\n        <li *ngIf='!auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\">\n          <a [routerLink]=\"['/register']\">Register</a>\n        </li>\n        <li *ngIf='!auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\">\n          <a [routerLink]=\"['/login']\">Login</a>\n        </li>\n        <li *ngIf='auth.isLoggedIn()' [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\" (click)='logOut()'>\n          <a href='#'>Logout</a>\n        </li>\n\n      </ul>\n    </div>\n  </div>\n</nav>"
 
 /***/ }),
 
@@ -557,7 +559,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class='jumbotron text-center'>\n  <h3 class='page-header'>Leave Managment System</h3>\n  <p>Leave Management System can be used to align your leaves with the rest of your team.</p>\n  <p>Just register yourself with details about your team, role etc., and you're good to go.</p>\n  <form class='form-group'>\n    <button type='button' class='btn btn-default' [routerLink]=\"['/register']\">Register</button>\n    <button type='button' class='btn btn-default' [routerLink]=\"['/login']\">Login</button>\n  </form>\n</div>\n"
+module.exports = "<div class='row'>\n  <div class='col-12 col-md-12'>\n    <div class='jumbotron text-center'>\n      <h3 class='page-header'>Leave Managment System</h3>\n      <p>Leave Management System can be used to align your leaves with the rest of your team.</p>\n      <p>Just register yourself with details about your team, role etc., and you're good to go.</p>\n      <form class='form-group'>\n        <button type='button' class='btn btn-default' [routerLink]=\"['/register']\">Register</button>\n        <button type='button' class='btn btn-default' [routerLink]=\"['/login']\">Login</button>\n      </form>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -632,6 +634,7 @@ module.exports = "<h3 class='page-header'>Login</h3>\n<div class='form-group'>\n
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_auth_service__ = __webpack_require__("../../../../../src/app/services/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_angular2_flash_messages_module_flash_messages_service__ = __webpack_require__("../../../../angular2-flash-messages/module/flash-messages.service.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_angular2_flash_messages_module_flash_messages_service___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_angular2_flash_messages_module_flash_messages_service__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_validate_service__ = __webpack_require__("../../../../../src/app/services/validate.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -645,9 +648,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(auth, flash, router) {
+    function LoginComponent(auth, validate, flash, router) {
         this.auth = auth;
+        this.validate = validate;
         this.flash = flash;
         this.router = router;
     }
@@ -660,6 +665,10 @@ var LoginComponent = /** @class */ (function () {
             password: this.password
         };
         console.log('User:', user);
+        if (!this.validate.validateEmail(user.username)) {
+            this.flash.show('Invalid email!!', { cssClass: "alert-danger", timeout: 3000 });
+            return;
+        }
         this.auth.authenticateUser(user).subscribe(function (data) {
             console.log('Data:', data);
             if (data.success) {
@@ -667,6 +676,10 @@ var LoginComponent = /** @class */ (function () {
                 _this.auth.setAdmin(data.user.isAdmin);
                 _this.flash.show('Successfully Logged in', { cssClass: 'alert-success', timeout: 300 });
                 _this.router.navigate(['/apply-leave']);
+            }
+            else {
+                _this.flash.show('Username and Password do not match', { cssClass: 'alert-danger', timeout: 300 });
+                _this.router.navigate(['/login']);
             }
         });
     };
@@ -677,6 +690,7 @@ var LoginComponent = /** @class */ (function () {
             styles: [__webpack_require__("../../../../../src/app/login/login.component.css")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_auth_service__["a" /* AuthService */],
+            __WEBPACK_IMPORTED_MODULE_4__services_validate_service__["a" /* ValidateService */],
             __WEBPACK_IMPORTED_MODULE_3_angular2_flash_messages_module_flash_messages_service__["FlashMessagesService"],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]])
     ], LoginComponent);
@@ -808,6 +822,51 @@ var RegisterComponent = /** @class */ (function () {
             __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* Router */]])
     ], RegisterComponent);
     return RegisterComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "../../../../../src/app/services/auth.guard.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthGuardService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__auth_service__ = __webpack_require__("../../../../../src/app/services/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/esm5/router.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var AuthGuardService = /** @class */ (function () {
+    function AuthGuardService(auth, router) {
+        this.auth = auth;
+        this.router = router;
+    }
+    AuthGuardService.prototype.canActivate = function () {
+        if (this.auth.isLoggedIn()) {
+            return true;
+        }
+        else {
+            this.router.navigate(['/login']);
+            return false;
+        }
+    };
+    AuthGuardService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */], __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* Router */]])
+    ], AuthGuardService);
+    return AuthGuardService;
 }());
 
 
