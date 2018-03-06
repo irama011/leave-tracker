@@ -824,6 +824,10 @@ var LoginComponent = /** @class */ (function () {
             this.flash.show('Invalid email!!', { cssClass: "alert-danger", timeout: 3000 });
             return;
         }
+        if (this.username === undefined || this.password === undefined) {
+            this.flash.show("Please fill all the fields", { cssClass: "alert-danger", timeout: 3000 });
+            return;
+        }
         this.auth.authenticateUser(user).subscribe(function (data) {
             console.log('Data:', data);
             if (data.success) {
@@ -831,6 +835,10 @@ var LoginComponent = /** @class */ (function () {
                 _this.auth.setAdmin(data.user.isAdmin);
                 _this.flash.show('Successfully Logged in', { cssClass: 'alert-success', timeout: 3000 });
                 _this.router.navigate(['/apply-leave']);
+            }
+            else if (data.msg === "User not found") {
+                _this.flash.show('User not registered!!', { cssClass: 'alert-danger', timeout: 3000 });
+                _this.router.navigate(['/login']);
             }
             else {
                 _this.flash.show('Username and Password do not match', { cssClass: 'alert-danger', timeout: 3000 });

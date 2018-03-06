@@ -42,15 +42,27 @@ router.post('/authenticate', (req, res) => {
     const password = req.body.password;
     userModel.findUserByName(username, (err, user) => {
         if (!user) {
-            console.log("User Not Found!!");
-            throw err;
+            
+            try{
+                console.log("User Not Found!!");
+                 res.json({success:false,msg:'User not found'});
+            }
+            catch (err){
+               
+            }
         } 
         else {
             userModel.comparePassword(password, user.password, (err, isMatch) => {
                 if (err){
-                    console.log("User and Password do not match");
-                    res.json({ success: false, msg: 'Authentication Failed' });
-                    throw err;
+                    try{
+                         console.log("User and Password do not match"); 
+                        res.json({ success: false, msg: 'Authentication Failed' });
+                    }
+                   catch(err){
+                       
+                   }
+                    
+                   // throw err;
                     
                 } 
                 if (isMatch) {
